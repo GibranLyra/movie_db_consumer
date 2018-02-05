@@ -24,6 +24,7 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         implements MovieDetailsContract.ContractView {
 
     private static final String LOADED_MOVIE = "loadedMovie";
+    private static final String EXTRA_MOVIE_ID = "MovieId";
     @BindView(R.id.fragment_movie_details_progress_bar)
     ContentLoadingProgressBar progressBar;
     @BindView(R.id.fragment_movie_details_author)
@@ -42,16 +43,14 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     TextView countsView;
     @BindView(R.id.fragment_movie_details_created_at)
     TextView createdAtView;
-
-    private static final String EXTRA_MOVIE = "MovieId";
     private Unbinder unbinder;
     private MovieDetailsContract.Presenter presenter;
     private Movie movie;
 
-    public static MovieDetailsFragment newInstance(Movie movie) {
+    public static MovieDetailsFragment newInstance(int movieId) {
         MovieDetailsFragment fragment = new MovieDetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_MOVIE, movie);
+        bundle.putInt(EXTRA_MOVIE_ID, movieId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -61,12 +60,12 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         if (savedInstanceState == null) {
-            presenter.loadMovie(getMovieFromBundle().getId());
+            presenter.loadMovie(getMovieIdFromBundle());
         } else {
             movie = savedInstanceState.getParcelable(LOADED_MOVIE);
             if (movie == null) {
                 //If we are restoring the state but dont have a movie, we load it
-                presenter.loadMovie(getMovieFromBundle().getId());
+                presenter.loadMovie(getMovieIdFromBundle());
             } else {
                 //If we already have the movies we simply add them to the list
                 showMovie(movie);
@@ -77,15 +76,15 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(LOADED_MOVIE, movie);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override
@@ -99,13 +98,22 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         super.showError();
     }
 
-    private Movie getMovieFromBundle() {
-        Bundle bundle = this.getArguments();
-        Movie movie = bundle.getParcelable(EXTRA_MOVIE);
-        if (movie != null) {
-            return movie;
+    @Override
+    public void showLoading(boolean show) {
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
         } else {
-            throw new RuntimeException("Movie cannot be null");
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private int getMovieIdFromBundle() {
+        Bundle bundle = this.getArguments();
+        Integer movieId = bundle.getInt(EXTRA_MOVIE_ID, -1);
+        if (movieId >= 0) {
+            return movieId;
+        } else {
+            throw new RuntimeException("MovieId cannot be < 0");
         }
     }
 
@@ -142,19 +150,9 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 //                createdAt));
     }
 
-
-    @Override
-    public void showLoading(boolean show) {
-        if (show) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     protected void reloadFragment() {
-        presenter.loadMovie(getMovieFromBundle().getId());
+        presenter.loadMovie(getMovieIdFromBundle());
     }
 
     @Override

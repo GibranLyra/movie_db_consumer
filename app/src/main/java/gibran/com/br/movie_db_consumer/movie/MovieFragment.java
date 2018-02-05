@@ -1,5 +1,6 @@
 package gibran.com.br.movie_db_consumer.movie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import butterknife.Unbinder;
 import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
+import gibran.com.br.movie_db_consumer.moviedetails.MovieDetailsActivity;
 import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.model.Configuration;
 import gibran.com.br.moviedbservice.model.Genre;
@@ -155,7 +157,12 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
 
     @Override
     public void showMovieDetailsUi(Movie movie, @Nullable View v) {
-
+        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getTitle(), movie.getId());
+        if (getContext() != null) {
+            getContext().startActivity(intent);
+        } else {
+            Timber.e("showMovieDetailsUi: Context is null, ignoring click.");
+        }
     }
 
     @Override

@@ -14,7 +14,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     private MovieDataSource movieDatasource;
     private MovieDetailsContract.ContractView view;
     private BaseSchedulerProvider schedulerProvider;
-    private Disposable getShotDisposable;
+    private Disposable getMovieDisposable;
 
     public MovieDetailsPresenter(MovieDataSource movieDataSource, MovieDetailsContract.ContractView view,
                                  BaseSchedulerProvider schedulerProvider) {
@@ -27,11 +27,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void loadMovie(int id) {
         view.showLoading(true);
-        getShotDisposable = movieDatasource.getMovieDetails(id)
+        getMovieDisposable = movieDatasource.getMovieDetails(id)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe(shot -> {
-                    view.showMovie(shot);
+                .subscribe(movie -> {
+                    view.showMovie(movie);
                     view.showLoading(false);
                 }, e -> {
                     view.showMovieError();
@@ -46,6 +46,6 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     @Override
     public void unsubscribe() {
-        ObserverHelper.safelyDispose(getShotDisposable);
+        ObserverHelper.safelyDispose(getMovieDisposable);
     }
 }

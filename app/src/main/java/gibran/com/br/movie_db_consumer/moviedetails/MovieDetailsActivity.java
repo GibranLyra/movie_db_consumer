@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
-import gibran.com.br.moviedbservice.model.Movie;
 import gibran.com.br.moviedbservice.movie.MovieApi;
 
 /**
@@ -22,14 +20,16 @@ import gibran.com.br.moviedbservice.movie.MovieApi;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    private static final String EXTRA_MOVIE = "MovieId";
+    private static final String EXTRA_MOVIE_ID = "MovieId";
+    public static final String EXTRA_MOVIE_TITLE = "MovieTitle";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     private MovieDetailsContract.Presenter presenter;
 
-    public static Intent createIntent(Context context, String movieId) {
+    public static Intent createIntent(Context context, String movieTitle, int movieId) {
         Intent intent = new Intent(context, MovieDetailsActivity.class);
-        intent.putExtra(EXTRA_MOVIE, movieId);
+        intent.putExtra(EXTRA_MOVIE_ID, movieId);
+        intent.putExtra(EXTRA_MOVIE_TITLE, movieTitle);
         return intent;
     }
 
@@ -39,17 +39,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         Bundle data = getIntent().getExtras();
-        String movieId = data.getString(EXTRA_MOVIE);
-        if (!TextUtils.isEmpty(movieId)) {
+        int movieId = -1;
+        if (data != null) {
+            movieId = data.getInt(EXTRA_MOVIE_ID, -1);
+        }
+        if (movieId >= 0) {
             setSupportActionBar(toolbar);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(movieId.getTitle());
+                actionBar.setTitle(data.getString(EXTRA_MOVIE_TITLE));
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
-//            setupViews(movieId);
+            setupViews(movieId);
         } else {
-            throw new RuntimeException("MovieId cannot be null")
+            throw new RuntimeException("MovieId cannot be < 0");
         }
     }
 
@@ -59,11 +62,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setupViews(Movie movie) {
+    private void setupViews(int movieId) {
         MovieDetailsFragment fragment =
                 (MovieDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.view_container);
         if (fragment == null) {
-            fragment = MovieDetailsFragment.newInstance(movie);
+            fragment = MovieDetailsFragment.newInstance(movieId);
             ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.view_container);
         }
         presenter = new MovieDetailsPresenter(MovieApi.getInstance(), fragment, SchedulerProvider.getInstance());
