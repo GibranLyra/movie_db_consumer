@@ -27,9 +27,11 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         initializeTimezone();
         initializeTimber();
         initializeApiModules();
+        initializeGlideRequestOptions();
     }
 
     public Configuration getConfiguration() {
