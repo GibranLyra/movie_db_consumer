@@ -1,12 +1,12 @@
 package gibran.com.br.movie_db_consumer.moviedetails;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -15,6 +15,7 @@ import butterknife.Unbinder;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
+import gibran.com.br.movie_db_consumer.helpers.ConverterHelper;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -26,24 +27,18 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 
     private static final String LOADED_MOVIE = "loadedMovie";
     private static final String EXTRA_MOVIE_ID = "MovieId";
+
     @BindView(R.id.fragment_movie_details_progress_bar)
     ContentLoadingProgressBar progressBar;
-    @BindView(R.id.fragment_movie_details_author)
-    TextView authorView;
-    @BindView(R.id.fragment_movie_details_image)
-    ImageView imageView;
-    @BindView(R.id.fragment_movie_details_avatar)
-    ImageView avatarView;
-    @BindView(R.id.fragment_movie_details_likes)
-    TextView likesView;
-    @BindView(R.id.fragment_movie_details_buckets_count)
-    TextView bucketsCountView;
+    @BindView(R.id.fragment_movie_details_year)
+    TextView yearTextView;
+    @BindView(R.id.fragment_movie_details_duration)
+    TextView durationTextView;
+    @BindView(R.id.fragment_movie_details_rating)
+    TextView ratingTextView;
     @BindView(R.id.fragment_movie_details_description)
-    TextView descriptionView;
-    @BindView(R.id.fragment_movie_details_views_count)
-    TextView countsView;
-    @BindView(R.id.fragment_movie_details_created_at)
-    TextView createdAtView;
+    TextView descriptionTextView;
+
     private Unbinder unbinder;
     private MovieDetailsContract.Presenter presenter;
     private Movie movie;
@@ -57,7 +52,8 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         if (!(getContext() instanceof MovieDetailsFragmentListener)) {
@@ -95,7 +91,7 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     public void showMovie(Movie movie) {
         this.movie = movie;
         if (getContext() != null) {
-            ((MovieDetailsFragmentListener)getContext()).onImageLoaded(ActivityHelper.getMovieProfileImagePath(movie));
+            ((MovieDetailsFragmentListener) getContext()).onImageLoaded(ActivityHelper.getMovieProfileImagePath(movie));
         }
         setupView(movie);
     }
@@ -125,6 +121,10 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     }
 
     private void setupView(Movie movie) {
+        yearTextView.setText(ConverterHelper.formatDate(movie.getReleaseDate()));
+        durationTextView.setText(String.valueOf(movie.getRuntime()));
+        ratingTextView.setText(String.valueOf(movie.getVoteAverage()));
+        descriptionTextView.setText(movie.getOverview());
 //        if (!TextUtils.isEmpty(movie.getImages().getNormal())) {
 //            Glide.with(getContext())
 //                    .load(movie.getImages().getNormal())
