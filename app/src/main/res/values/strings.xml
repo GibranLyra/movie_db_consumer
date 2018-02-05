@@ -1,4 +1,10 @@
 <resources>
-    <string name="app_name">movie_db_consumer</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">MovieDb Consumer</string>
+    <string name="movie_item_view_count_text">%1$s views</string>
+    <string name="movie_item_created_at_text">Created at %1$s</string>
+    <string name="generic_error">Ocorreu um erro.</string>
+    <string name="load_page_error">Ocorreu um erro ao tentar carregar a página.</string>
+    <string name="movie_item_image_description">Movie image</string>
+    <string name="movie_details_image_description">Movie image</string>
+    <string name="snackbar_try_again">Tentar Novamente</string>
 </resources>
