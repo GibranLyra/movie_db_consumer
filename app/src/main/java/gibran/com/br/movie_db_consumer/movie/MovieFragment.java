@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
+import gibran.com.br.moviedbservice.model.Configuration;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -68,12 +70,21 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         super.onViewCreated(view, savedInstanceState);
         this.savedInstanceState = savedInstanceState;
         if (savedInstanceState == null) {
-            presenter.loadMovies();
+            if (AppContext.getInstance().getConfiguration() == null) {
+                presenter.loadConfiguration();
+            } else {
+                presenter.loadMovies();
+            }
         } else {
             movies = savedInstanceState.getParcelableArrayList(LOADED_SHOTS);
             if (movies == null) {
-                //If we are restoring the state but dont have movies, we load it.
-                presenter.loadMovies();
+                if (AppContext.getInstance().getConfiguration() == null) {
+                    presenter.loadConfiguration();
+                } else {
+                    //If we are restoring the state but dont have movies, we load it.
+                    presenter.loadMovies();
+                }
+
             } else {
                 //If we already have the movies we simply add them to the list
                 showMovies(movies);
@@ -111,6 +122,12 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     }
 
     @Override
+    public void configurationLoaded(Configuration configuration) {
+        AppContext.getInstance().setConfiguration(configuration);
+        presenter.loadMovies();
+    }
+
+    @Override
     public void showMovies(ArrayList<Movie> movies) {
         swipeToRefresh.setRefreshing(false);
         this.movies = movies;
@@ -133,7 +150,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     }
 
     @Override
-    public void showMoviesError() {
+    public void showError() {
         swipeToRefresh.setRefreshing(false);
         // TODO: 05/02/18 showError
 //        showMovieError();

@@ -7,6 +7,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import gibran.com.br.moviedbservice.LoggingInterceptor;
 import gibran.com.br.moviedbservice.MovieDbApiModule;
+import gibran.com.br.moviedbservice.model.Configuration;
 import timber.log.Timber;
 
 /**
@@ -17,6 +18,7 @@ public class AppContext extends Application {
 
     private static AppContext instance;
     private RequestOptions requestOptions;
+    private Configuration configuration;
 
     public static AppContext getInstance() {
         return instance;
@@ -28,6 +30,19 @@ public class AppContext extends Application {
         initializeTimezone();
         initializeTimber();
         initializeApiModules();
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public RequestOptions getGlideRequestOptions() {
+        return requestOptions;
+    }
+
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     private void initializeTimezone() {
@@ -53,7 +68,4 @@ public class AppContext extends Application {
                 .error(R.drawable.placeholder);
     }
 
-    public RequestOptions getGlideRequestOptions() {
-        return requestOptions;
-    }
 }
