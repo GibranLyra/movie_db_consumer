@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">movie_db_consumer</string>
+    <string name="action_settings">Settings</string>
+</resources>
