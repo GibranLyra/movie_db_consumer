@@ -120,8 +120,8 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
 
     @Override
     public void showError() {
-        // TODO: 05/02/18 showError
-//        showMovieError();
+        super.showShotError();
+
     }
 
     @Override
