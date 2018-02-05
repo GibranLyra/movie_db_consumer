@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import gibran.com.br.moviedbservice.MovieDbApiModule;
 import gibran.com.br.moviedbservice.model.Genre;
 import gibran.com.br.moviedbservice.model.GenreResponse;
+import gibran.com.br.moviedbservice.model.Movie;
+import gibran.com.br.moviedbservice.model.MovieDbBaseResponse;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import timber.log.Timber;
@@ -37,5 +39,12 @@ public class GenreApi implements GenreDataSource {
         return genreService.getMovieGenres()
                 .map(GenreResponse::getGenres)
                 .doOnError(e -> Timber.e(e, "getMovieGenres: %s", e.getMessage()));
+    }
+
+    @Override
+    public Observable<ArrayList<Movie>> getMovies(int genreId) {
+        return genreService.getMovies(genreId)
+                .map(MovieDbBaseResponse::getResults)
+                .doOnError(e -> Timber.e(e, "getMovies: %s", e.getMessage()));
     }
 }

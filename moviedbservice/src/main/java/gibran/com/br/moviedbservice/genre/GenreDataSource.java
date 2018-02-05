@@ -3,6 +3,7 @@ package gibran.com.br.moviedbservice.genre;
 import java.util.ArrayList;
 
 import gibran.com.br.moviedbservice.model.Genre;
+import gibran.com.br.moviedbservice.model.Movie;
 import io.reactivex.Observable;
 
 /**
@@ -11,4 +12,6 @@ import io.reactivex.Observable;
 
 public interface GenreDataSource {
     Observable<ArrayList<Genre>> getMovieGenres();
+
+    Observable<ArrayList<Movie>> getMovies(int genreId);
 }

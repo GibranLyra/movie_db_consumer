@@ -23,6 +23,7 @@ import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.moviedbservice.model.Configuration;
+import gibran.com.br.moviedbservice.model.Genre;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -57,7 +58,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie, container, false);
         unbinder = ButterKnife.bind(this, view);
-        swipeToRefresh.setOnRefreshListener(() -> reloadFragment());
+        swipeToRefresh.setOnRefreshListener(this::reloadFragment);
         swipeToRefresh.setColorSchemeResources(
                 R.color.accent,
                 R.color.colorSecondary,
@@ -73,7 +74,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
             if (AppContext.getInstance().getConfiguration() == null) {
                 presenter.loadConfiguration();
             } else {
-                presenter.loadMovies();
+                presenter.loadGenres();
             }
         } else {
             movies = savedInstanceState.getParcelableArrayList(LOADED_SHOTS);
@@ -82,7 +83,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
                     presenter.loadConfiguration();
                 } else {
                     //If we are restoring the state but dont have movies, we load it.
-                    presenter.loadMovies();
+                    presenter.loadGenres();
                 }
 
             } else {
@@ -124,7 +125,14 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     @Override
     public void configurationLoaded(Configuration configuration) {
         AppContext.getInstance().setConfiguration(configuration);
-        presenter.loadMovies();
+        presenter.loadGenres();
+    }
+
+    @Override
+    public void genresLoaded(ArrayList<Genre> genres) {
+        for (Genre genre : genres) {
+            //TODO make loadMOviesRequest
+        }
     }
 
     @Override
@@ -187,6 +195,10 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
 
     @Override
     protected void reloadFragment() {
-        presenter.loadMovies();
+        if (AppContext.getInstance().getConfiguration() == null) {
+            presenter.loadConfiguration();
+        } else {
+            presenter.loadGenres();
+        }
     }
 }

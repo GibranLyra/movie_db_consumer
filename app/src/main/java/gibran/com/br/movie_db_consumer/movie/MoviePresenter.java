@@ -7,6 +7,7 @@ import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.ObserverHelper;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.BaseSchedulerProvider;
 import gibran.com.br.moviedbservice.configuration.ConfigurationDataSource;
+import gibran.com.br.moviedbservice.genre.GenreDataSource;
 import gibran.com.br.moviedbservice.model.Movie;
 import gibran.com.br.moviedbservice.movie.MoviesDataSource;
 import io.reactivex.disposables.Disposable;
@@ -19,19 +20,23 @@ import timber.log.Timber;
 public class MoviePresenter implements MovieContract.Presenter {
 
     private ConfigurationDataSource configurationDataSource;
-    private gibran.com.br.moviedbservice.movie.MoviesDataSource movieRepository;
+    private GenreDataSource genreDataSource;
+    private gibran.com.br.moviedbservice.movie.MoviesDataSource genreRepository;
     private MovieContract.ContractView view;
     private gibran.com.br.movie_db_consumer.helpers.schedulers.BaseSchedulerProvider schedulerProvider;
     private Disposable getMoviesDisposable;
     private Disposable getConfigurationDisposable;
+    private Disposable getGenresDisposable;
 
 
     public MoviePresenter(ConfigurationDataSource configurationDataSource,
+                          GenreDataSource genreDataSource,
                           MoviesDataSource movieDataSource,
                           MovieContract.ContractView view,
                           BaseSchedulerProvider schedulerProvider) {
         this.configurationDataSource = configurationDataSource;
-        this.movieRepository = movieDataSource;
+        this.genreDataSource = genreDataSource;
+        this.genreRepository = movieDataSource;
         this.view = view;
         this.schedulerProvider = schedulerProvider;
         this.view.setPresenter(this);
@@ -45,7 +50,7 @@ public class MoviePresenter implements MovieContract.Presenter {
     @Override
     public void unsubscribe() {
         /* Unsubscribe observable to avoid leaks */
-        ObserverHelper.safelyDispose(getConfigurationDisposable, getMoviesDisposable);
+        ObserverHelper.safelyDispose(getConfigurationDisposable, getMoviesDisposable, getGenresDisposable);
     }
 
     @Override
@@ -55,15 +60,7 @@ public class MoviePresenter implements MovieContract.Presenter {
         getConfigurationDisposable = configurationDataSource.getConfiguration()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .doOnTerminate(() -> {
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement(); // Set app as idle.
-                    }
-                })
-                .subscribe(configuration -> {
-                            view.showLoading(false);
-                            view.configurationLoaded(configuration);
-                        },
+                .subscribe(configuration -> view.configurationLoaded(configuration),
                         e -> {
                             Timber.e(e, "loadConfiguration: %s", e.getMessage());
                             view.showLoading(false);
@@ -72,12 +69,30 @@ public class MoviePresenter implements MovieContract.Presenter {
     }
 
     @Override
-    public void loadMovies() {
+    public void loadGenres() {
+        view.showLoading(true);
+
+        // The network request might be handled in a different thread so make sure Espresso knows
+        // that the app is busy until the response is handled.
+        EspressoIdlingResource.increment(); // App is busy until further notice
+        getGenresDisposable = genreDataSource.getMovieGenres()
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(genres -> view.genresLoaded(genres),
+                        e -> {
+                            Timber.e(e, "loadGenres: %s", e.getMessage());
+                            view.showLoading(false);
+                            view.showError();
+                        });
+    }
+
+    @Override
+    public void loadMovies(String genreId) {
         view.showLoading(true);
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
-        getMoviesDisposable = movieRepository.getPopular()
+        getMoviesDisposable = genreRepository.getPopular()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnTerminate(() -> {
@@ -94,7 +109,6 @@ public class MoviePresenter implements MovieContract.Presenter {
                             view.showLoading(false);
                             view.showError();
                         });
-
     }
 
     @Override

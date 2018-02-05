@@ -12,4 +12,11 @@ public class GenreResponse {
     public void setGenres(ArrayList<Genre> genres) {
         this.genres = genres;
     }
+
+    @Override
+    public String toString() {
+        return "GenreResponse{" +
+                "genres=" + genres +
+                '}';
+    }
 }
