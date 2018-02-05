@@ -2,6 +2,7 @@ package gibran.com.br.movie_db_consumer;
 
 import android.app.Application;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import gibran.com.br.moviedbservice.LoggingInterceptor;
@@ -13,6 +14,13 @@ import timber.log.Timber;
  */
 
 public class AppContext extends Application {
+
+    private static AppContext instance;
+    private RequestOptions requestOptions;
+
+    public static AppContext getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
@@ -34,5 +42,18 @@ public class AppContext extends Application {
 
     private void initializeApiModules() {
         MovieDbApiModule.setRetrofit(LoggingInterceptor.Level.HEADERS);
+    }
+
+    private RequestOptions initializeGlideRequestOptions() {
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions();
+        }
+        return requestOptions
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder);
+    }
+
+    public RequestOptions getGlideRequestOptions() {
+        return requestOptions;
     }
 }

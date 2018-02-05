@@ -20,7 +20,7 @@ public interface MovieContract {
 
         boolean isActive();
 
-        void showShotDetailsUi(Movie movie, @Nullable android.view.View v);
+        void showMovieDetailsUi(Movie movie, @Nullable android.view.View v);
 
     }
 

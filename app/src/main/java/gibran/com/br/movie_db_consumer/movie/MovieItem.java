@@ -45,11 +45,12 @@ public class MovieItem extends BaseRecyclerItem<Movie, MovieItem, MovieItem.View
         //bind our data
         Context context = viewHolder.itemView.getContext();
         Movie movie = getModel();
-        // TODO: 05/02/18 get Image
-//        if (movie.getImages() != null && !TextUtils.isEmpty(movie.getImages().getNormal())) {
+        viewHolder.titleView.setText(movie.getTitle());
+        // TODO: 05/02/18 implement images
+//        if (!TextUtils.isEmpty(movie.getPosterPath())) {
 //            Glide.with(context)
 //                    .setDefaultRequestOptions(AppContext.getInstance().getGlideRequestOptions())
-//                    .load(movie.getImages().getNormal())
+//                    .load(movie.getPosterPath())
 //                    .into(viewHolder.imageView);
 //        } else {
 //            Glide.with(context)

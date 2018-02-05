@@ -56,9 +56,9 @@ public class MoviePresenter implements MovieContract.Presenter {
                         EspressoIdlingResource.decrement(); // Set app as idle.
                     }
                 })
-                .subscribe(shots -> {
+                .subscribe(movies -> {
                             view.showLoading(false);
-                            view.showMovies(shots);
+                            view.showMovies(movies);
                         },
                         e -> {
                             Timber.e(e, "loadMovies: %s", e.getMessage());
@@ -70,6 +70,6 @@ public class MoviePresenter implements MovieContract.Presenter {
 
     @Override
     public void openMovieDetails(Movie movie, @Nullable View v) {
-        view.showShotDetailsUi(movie, v);
+        view.showMovieDetailsUi(movie, v);
     }
 }

@@ -114,7 +114,9 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     public void showMovies(ArrayList<Movie> movies) {
         swipeToRefresh.setRefreshing(false);
         this.movies = movies;
-        fastAdapter = new FastItemAdapter<>();
+        if (fastAdapter == null) {
+            fastAdapter = new FastItemAdapter<>();
+        }
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -125,6 +127,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
             presenter.openMovieDetails(item.getModel(), v);
             return false;
         });
+        recyclerView.setAdapter(fastAdapter);
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
     }
@@ -149,7 +152,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     }
 
     @Override
-    public void showShotDetailsUi(Movie movie, @Nullable View v) {
+    public void showMovieDetailsUi(Movie movie, @Nullable View v) {
 
     }
 
