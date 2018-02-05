@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
@@ -25,7 +26,6 @@ import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.moviedbservice.model.Configuration;
 import gibran.com.br.moviedbservice.model.Genre;
 import gibran.com.br.moviedbservice.model.Movie;
-import timber.log.Timber;
 
 /**
  * Created by gibranlyra on 05/02/18.
@@ -103,13 +103,18 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        Timber.d("showMovies: Title %s", title);
         addRecyclerItems(movies, fastAdapter);
         fastAdapter.withOnClickListener((v, adapter, item, position) -> {
             presenter.openMovieDetails(item.getModel(), v);
             return false;
         });
         recyclerView.setAdapter(fastAdapter);
+        //Make textView to title
+        TextView recyclerTitleView = (TextView) LayoutInflater
+                .from(getContext()).inflate(R.layout.recycler_title_text_view, null);
+        recyclerTitleView.setText(title);
+        //Add recycler and textview
+        recyclerContainer.addView(recyclerTitleView);
         recyclerContainer.addView(recyclerView);
     }
 
