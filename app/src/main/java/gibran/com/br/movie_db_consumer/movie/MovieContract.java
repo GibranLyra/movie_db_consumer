@@ -18,7 +18,7 @@ public interface MovieContract {
 
         void genresLoaded(ArrayList<Genre> genres);
 
-        void showMovies(ArrayList<Movie> movies);
+        void showMovies(String title, ArrayList<Movie> movies);
 
         void showError();
 
@@ -34,7 +34,7 @@ public interface MovieContract {
 
         void loadGenres();
 
-        void loadMovies(String genreId);
+        void loadMovies(int genreId, String title);
 
         void openMovieDetails(Movie movie, @Nullable android.view.View v);
 

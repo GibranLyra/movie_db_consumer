@@ -3,13 +3,13 @@ package gibran.com.br.movie_db_consumer.movie;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -32,20 +32,13 @@ import gibran.com.br.moviedbservice.model.Movie;
 
 public class MovieFragment extends BaseFragment<MovieContract.Presenter> implements MovieContract.ContractView {
 
-    private static final String LOADED_SHOTS = "loadedShots";
+    @BindView(R.id.fragment_movie_recycler_container)
+    protected LinearLayout recyclerContainer;
     @BindView(R.id.fragment_movie_progress_bar)
     protected ProgressBar progressBar;
-    @BindView(R.id.fragment_movie_recycler)
-    protected RecyclerView recyclerView;
-    @BindView(R.id.fragment_movie_swipe)
-    protected SwipeRefreshLayout swipeToRefresh;
-    protected boolean isViewLoaded;
     private Unbinder unbinder;
     private MovieContract.Presenter presenter;
-    private FastItemAdapter<MovieItem> fastAdapter;
-    @Nullable
-    private Bundle savedInstanceState;
-    private ArrayList<Movie> movies;
+    private boolean isViewLoaded = false;
 
     public static MovieFragment newInstance() {
         MovieFragment fragment = new MovieFragment();
@@ -58,39 +51,16 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie, container, false);
         unbinder = ButterKnife.bind(this, view);
-        swipeToRefresh.setOnRefreshListener(this::reloadFragment);
-        swipeToRefresh.setColorSchemeResources(
-                R.color.accent,
-                R.color.colorSecondary,
-                R.color.primary);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.savedInstanceState = savedInstanceState;
-        if (savedInstanceState == null) {
-            if (AppContext.getInstance().getConfiguration() == null) {
-                presenter.loadConfiguration();
-            } else {
-                presenter.loadGenres();
-            }
+        if (AppContext.getInstance().getConfiguration() == null) {
+            presenter.loadConfiguration();
         } else {
-            movies = savedInstanceState.getParcelableArrayList(LOADED_SHOTS);
-            if (movies == null) {
-                if (AppContext.getInstance().getConfiguration() == null) {
-                    presenter.loadConfiguration();
-                } else {
-                    //If we are restoring the state but dont have movies, we load it.
-                    presenter.loadGenres();
-                }
-
-            } else {
-                //If we already have the movies we simply add them to the list
-                showMovies(movies);
-                showLoading(false);
-            }
+            presenter.loadGenres();
         }
     }
 
@@ -98,16 +68,6 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     public void onResume() {
         super.onResume();
         presenter.subscribe();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (fastAdapter != null) {
-            //add the values which need to be saved from the adapter to the bundle
-            outState = fastAdapter.saveInstanceState(outState);
-        }
-        outState.putParcelableArrayList(LOADED_SHOTS, movies);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -131,35 +91,28 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     @Override
     public void genresLoaded(ArrayList<Genre> genres) {
         for (Genre genre : genres) {
-            //TODO make loadMOviesRequest
+            presenter.loadMovies(genre.getId(), genre.getName());
         }
     }
 
     @Override
-    public void showMovies(ArrayList<Movie> movies) {
-        swipeToRefresh.setRefreshing(false);
-        this.movies = movies;
-        if (fastAdapter == null) {
-            fastAdapter = new FastItemAdapter<>();
-        }
+    public void showMovies(String title, ArrayList<Movie> movies) {
+        FastItemAdapter<MovieItem> fastAdapter = new FastItemAdapter<>();
+        RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        fastAdapter.clear();
-        addRecyclerItems(movies);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        addRecyclerItems(movies, fastAdapter);
         fastAdapter.withOnClickListener((v, adapter, item, position) -> {
             presenter.openMovieDetails(item.getModel(), v);
             return false;
         });
         recyclerView.setAdapter(fastAdapter);
-        //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        recyclerContainer.addView(recyclerView);
     }
 
     @Override
     public void showError() {
-        swipeToRefresh.setRefreshing(false);
         // TODO: 05/02/18 showError
 //        showMovieError();
     }
@@ -169,10 +122,8 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         isViewLoaded = !show;
         if (show) {
             progressBar.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
         } else {
             progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -186,7 +137,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         this.presenter = presenter;
     }
 
-    private void addRecyclerItems(ArrayList<Movie> movies) {
+    private void addRecyclerItems(ArrayList<Movie> movies, FastItemAdapter<MovieItem> fastAdapter) {
         for (Movie movie : movies) {
             MovieItem movieItem = new MovieItem(movie);
             fastAdapter.add(movieItem);

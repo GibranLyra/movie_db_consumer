@@ -87,7 +87,7 @@ public class MoviePresenter implements MovieContract.Presenter {
     }
 
     @Override
-    public void loadMovies(String genreId) {
+    public void loadMovies(int genreId, String title) {
         view.showLoading(true);
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
@@ -102,7 +102,7 @@ public class MoviePresenter implements MovieContract.Presenter {
                 })
                 .subscribe(movies -> {
                             view.showLoading(false);
-                            view.showMovies(movies);
+                            view.showMovies(title, movies);
                         },
                         e -> {
                             Timber.e(e, "loadMovies: %s", e.getMessage());

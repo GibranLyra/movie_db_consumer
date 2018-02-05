@@ -17,6 +17,7 @@ import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
 import gibran.com.br.moviedbservice.configuration.ConfigurationApi;
+import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.movie.MoviesApi;
 
 public class MovieActivity extends AppCompatActivity {
@@ -29,8 +30,7 @@ public class MovieActivity extends AppCompatActivity {
     private MovieContract.Presenter presenter;
 
     public static Intent createIntent(Context context) {
-        Intent intent = new Intent(context, MovieActivity.class);
-        return intent;
+        return new Intent(context, MovieActivity.class);
     }
 
     @Override
@@ -76,6 +76,7 @@ public class MovieActivity extends AppCompatActivity {
             ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), movieFragment, R.id.view_container);
         }
         presenter = new MoviePresenter(ConfigurationApi.getInstance(),
+                GenreApi.getInstance(),
                 MoviesApi.getInstance(),
                 movieFragment,
                 SchedulerProvider.getInstance());
