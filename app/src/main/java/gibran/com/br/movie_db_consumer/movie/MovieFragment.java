@@ -13,7 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
 
 import java.util.ArrayList;
 
@@ -23,9 +26,13 @@ import butterknife.Unbinder;
 import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
+import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.model.Configuration;
 import gibran.com.br.moviedbservice.model.Genre;
 import gibran.com.br.moviedbservice.model.Movie;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by gibranlyra on 05/02/18.
@@ -97,31 +104,43 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     }
 
     @Override
-    public void showMovies(String title, ArrayList<Movie> movies) {
-        FastItemAdapter<MovieItem> fastAdapter = new FastItemAdapter<>();
-        RecyclerView recyclerView = new RecyclerView(getContext());
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        addRecyclerItems(movies, fastAdapter);
-        fastAdapter.withOnClickListener((v, adapter, item, position) -> {
-            presenter.openMovieDetails(item.getModel(), v);
-            return false;
-        });
-        recyclerView.setAdapter(fastAdapter);
-        //Make textView to title
-        TextView recyclerTitleView = (TextView) LayoutInflater
-                .from(getContext()).inflate(R.layout.movie_recycler_title_text_view, null);
-        recyclerTitleView.setText(title);
-        //Add recycler and textview
-        recyclerContainer.addView(recyclerTitleView);
-        recyclerContainer.addView(recyclerView);
+    public void showMovies(int genreId, String title, ArrayList<Movie> movies) {
+        if (!movies.isEmpty()) {
+            FastItemAdapter<MovieItem> fastAdapter = new FastItemAdapter<>();
+            RecyclerView recyclerView = new RecyclerView(getContext());
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            addRecyclerItems(movies, fastAdapter);
+            ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
+            recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
+                @Override
+                public void onLoadMore(int currentPage) {
+                    GenreApi.getInstance().getMovies(genreId, currentPage)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(pagedMovies -> addRecyclerItems(pagedMovies, fastAdapter),
+                                    e -> Timber.e(e, "onLoadMore: %s", e.getMessage()));
+                }
+            });
+            fastAdapter.withOnClickListener((v, adapter, item, position) -> {
+                presenter.openMovieDetails(item.getModel(), v);
+                return false;
+            });
+            recyclerView.setAdapter(fastAdapter);
+            //Make textView to title
+            TextView recyclerTitleView = (TextView) LayoutInflater
+                    .from(getContext()).inflate(R.layout.movie_recycler_title_text_view, null);
+            recyclerTitleView.setText(title);
+            //Add recycler and textView
+            recyclerContainer.addView(recyclerTitleView);
+            recyclerContainer.addView(recyclerView);
+        }
     }
 
     @Override
     public void showError() {
         super.showShotError();
-
     }
 
     @Override

@@ -42,8 +42,8 @@ public class GenreApi implements GenreDataSource {
     }
 
     @Override
-    public Observable<ArrayList<Movie>> getMovies(int genreId) {
-        return genreService.getMovies(genreId)
+    public Observable<ArrayList<Movie>> getMovies(int genreId, int page) {
+        return genreService.getMovies(genreId, page)
                 .map(MovieDbBaseResponse::getResults)
                 .doOnError(e -> Timber.e(e, "getMovies: %s", e.getMessage()));
     }

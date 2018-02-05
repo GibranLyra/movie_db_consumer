@@ -18,7 +18,7 @@ public interface MovieContract {
 
         void genresLoaded(ArrayList<Genre> genres);
 
-        void showMovies(String title, ArrayList<Movie> movies);
+        void showMovies(int genreId, String title, ArrayList<Movie> movies);
 
         void showError();
 

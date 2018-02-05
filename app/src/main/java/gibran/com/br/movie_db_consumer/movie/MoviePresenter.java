@@ -88,7 +88,7 @@ public class MoviePresenter implements MovieContract.Presenter {
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
-        getMoviesDisposable = genreDataSource.getMovies(genreId)
+        getMoviesDisposable = genreDataSource.getMovies(genreId, 1)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .doOnTerminate(() -> {
@@ -98,7 +98,7 @@ public class MoviePresenter implements MovieContract.Presenter {
                 })
                 .subscribe(movies -> {
                             view.showLoading(false);
-                            view.showMovies(title, movies);
+                            view.showMovies(genreId, title, movies);
                         },
                         e -> {
                             Timber.e(e, "loadMovies: %s", e.getMessage());

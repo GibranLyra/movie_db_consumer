@@ -13,5 +13,5 @@ import io.reactivex.Observable;
 public interface GenreDataSource {
     Observable<ArrayList<Genre>> getMovieGenres();
 
-    Observable<ArrayList<Movie>> getMovies(int genreId);
+    Observable<ArrayList<Movie>> getMovies(int genreId, int page);
 }
