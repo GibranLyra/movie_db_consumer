@@ -1,8 +1,6 @@
 package gibran.com.br.moviedbservice.model.movie;
 
-import java.util.ArrayList;
-
-import gibran.com.br.moviedbservice.model.Movie;
+import gibran.com.br.moviedbservice.model.MovieDbBaseResponse;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 
@@ -13,5 +11,5 @@ import retrofit2.http.GET;
 public interface MovieService {
 
     @GET("movie/popular")
-    Observable<ArrayList<Movie>> getPopular();
+    Observable<MovieDbBaseResponse> getPopular();
 }

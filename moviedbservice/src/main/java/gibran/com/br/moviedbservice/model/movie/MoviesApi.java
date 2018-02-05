@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import gibran.com.br.moviedbservice.MovieDbApiModule;
 import gibran.com.br.moviedbservice.model.Movie;
+import gibran.com.br.moviedbservice.model.MovieDbBaseResponse;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import timber.log.Timber;
@@ -34,7 +35,7 @@ public class MoviesApi implements MoviesDataSource {
 
     public Observable<ArrayList<Movie>> getPopular() {
         return movieService.getPopular()
+                .map(MovieDbBaseResponse::getResults)
                 .doOnError(e -> Timber.e(e, "getPopular: %s", e.getMessage()));
     }
-
 }

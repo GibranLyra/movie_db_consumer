@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import org.threeten.bp.Clock;
 
 import io.reactivex.annotations.Nullable;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -41,8 +42,16 @@ public class MovieDbApiModule {
         LoggingInterceptor interceptor = new LoggingInterceptor(Clock.systemDefaultZone());
         interceptor.setLogLevel(logLevel);
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(interceptor);
-        addApiKeyInterceptor(builder);
+        builder.addInterceptor(chain -> {
+            Request original = chain.request();
+            HttpUrl originalHttpUrl = original.url();
+            HttpUrl url = originalHttpUrl.newBuilder()
+                    .addQueryParameter(API_KEY_NAME, API_KEY_VALUE)
+                    .build();
+            Request.Builder requestBuilder = original.newBuilder().url(url);
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
+        });
         OkHttpClient okClient = builder.build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -50,14 +59,5 @@ public class MovieDbApiModule {
                 .addConverterFactory(GsonConverterFactory.create(getDefaultGsonBuilder()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-    }
-
-    private static void addApiKeyInterceptor(OkHttpClient.Builder builder) {
-        builder.addInterceptor(chain -> {
-            Request request = chain.request();
-            request.newBuilder().url(
-                    chain.request().url().newBuilder().addQueryParameter(API_KEY_NAME, API_KEY_VALUE).build()).build();
-            return chain.proceed(request);
-        });
     }
 }

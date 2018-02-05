@@ -18,18 +18,18 @@ public class MovieDbBaseResponse implements Parcelable {
         }
     };
     private int page;
-    private int total_pages;
+    private int totalPages;
     private ArrayList<Movie> results;
-    private int total_results;
+    private int totalResults;
 
     public MovieDbBaseResponse() {
     }
 
     protected MovieDbBaseResponse(Parcel in) {
         this.page = in.readInt();
-        this.total_pages = in.readInt();
+        this.totalPages = in.readInt();
         this.results = in.createTypedArrayList(Movie.CREATOR);
-        this.total_results = in.readInt();
+        this.totalResults = in.readInt();
     }
 
     public int getPage() {
@@ -40,12 +40,12 @@ public class MovieDbBaseResponse implements Parcelable {
         this.page = page;
     }
 
-    public int getTotal_pages() {
-        return this.total_pages;
+    public int getTotalPages() {
+        return this.totalPages;
     }
 
-    public void setTotal_pages(int total_pages) {
-        this.total_pages = total_pages;
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
     }
 
     public ArrayList<Movie> getResults() {
@@ -56,12 +56,12 @@ public class MovieDbBaseResponse implements Parcelable {
         this.results = results;
     }
 
-    public int getTotal_results() {
-        return this.total_results;
+    public int getTotalResults() {
+        return this.totalResults;
     }
 
-    public void setTotal_results(int total_results) {
-        this.total_results = total_results;
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
     }
 
     @Override
@@ -72,8 +72,8 @@ public class MovieDbBaseResponse implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.page);
-        dest.writeInt(this.total_pages);
+        dest.writeInt(this.totalPages);
         dest.writeTypedList(this.results);
-        dest.writeInt(this.total_results);
+        dest.writeInt(this.totalResults);
     }
 }
