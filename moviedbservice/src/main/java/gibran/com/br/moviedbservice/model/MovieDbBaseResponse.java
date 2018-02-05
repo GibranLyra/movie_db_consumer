@@ -76,4 +76,14 @@ public class MovieDbBaseResponse implements Parcelable {
         dest.writeTypedList(this.results);
         dest.writeInt(this.totalResults);
     }
+
+    @Override
+    public String toString() {
+        return "MovieDbBaseResponse{" +
+                "page=" + page +
+                ", totalPages=" + totalPages +
+                ", results=" + results +
+                ", totalResults=" + totalResults +
+                '}';
+    }
 }

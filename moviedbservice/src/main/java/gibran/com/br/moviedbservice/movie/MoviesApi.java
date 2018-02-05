@@ -1,4 +1,4 @@
-package gibran.com.br.moviedbservice.model.movie;
+package gibran.com.br.moviedbservice.movie;
 
 import java.util.ArrayList;
 

@@ -7,7 +7,7 @@ import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.ObserverHelper;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.BaseSchedulerProvider;
 import gibran.com.br.moviedbservice.model.Movie;
-import gibran.com.br.moviedbservice.model.movie.MoviesDataSource;
+import gibran.com.br.moviedbservice.movie.MoviesDataSource;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 

@@ -189,4 +189,24 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "overview='" + overview + '\'' +
+                ", originalLanguage='" + originalLanguage + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", video=" + video +
+                ", title='" + title + '\'' +
+                ", genreIds=" + genreIds +
+                ", posterPath='" + posterPath + '\'' +
+                ", backdropPath='" + backdropPath + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", popularity=" + popularity +
+                ", voteAverage=" + voteAverage +
+                ", id=" + id +
+                ", adult=" + adult +
+                ", voteCount=" + voteCount +
+                '}';
+    }
 }

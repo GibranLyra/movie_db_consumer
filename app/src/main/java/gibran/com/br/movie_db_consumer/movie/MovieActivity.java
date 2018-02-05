@@ -16,7 +16,7 @@ import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
-import gibran.com.br.moviedbservice.model.movie.MoviesApi;
+import gibran.com.br.moviedbservice.movie.MoviesApi;
 
 public class MovieActivity extends AppCompatActivity {
 
