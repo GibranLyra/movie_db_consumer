@@ -13,4 +13,6 @@ public interface MovieDataSource {
     Observable<ArrayList<Movie>> getPopular();
 
     Observable<Movie> getMovieDetails(int movieId);
+
+    Observable<ArrayList<Movie>> getRecommendations(int movieId);
 }

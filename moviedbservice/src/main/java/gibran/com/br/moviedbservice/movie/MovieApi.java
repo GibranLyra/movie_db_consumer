@@ -44,4 +44,11 @@ public class MovieApi implements MovieDataSource {
         return movieService.getMovie(movieId)
                 .doOnError(e -> Timber.e(e, "getMovieDetails: %s", e.getMessage()));
     }
+
+    @Override
+    public Observable<ArrayList<Movie>> getRecommendations(int movieId) {
+        return movieService.getPopular()
+                .map(MovieDbBaseResponse::getResults)
+                .doOnError(e -> Timber.e(e, "getRecommendations: %s", e.getMessage()));
+    }
 }

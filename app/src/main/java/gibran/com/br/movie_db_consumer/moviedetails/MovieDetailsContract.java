@@ -1,6 +1,8 @@
 package gibran.com.br.movie_db_consumer.moviedetails;
 
 
+import java.util.ArrayList;
+
 import gibran.com.br.movie_db_consumer.base.BaseContractPresenter;
 import gibran.com.br.movie_db_consumer.base.BaseContractView;
 import gibran.com.br.moviedbservice.model.Movie;
@@ -13,12 +15,16 @@ public interface MovieDetailsContract {
 
         void showMovieError();
 
+        void showRelated(ArrayList<Movie> relatedMovies);
+
         void showLoading(boolean show);
 
         boolean isActive();
     }
 
     interface Presenter extends BaseContractPresenter {
-        void loadMovie(int id);
+        void loadMovie(int movieId);
+
+        void loadRelated(int movieId);
     }
 }

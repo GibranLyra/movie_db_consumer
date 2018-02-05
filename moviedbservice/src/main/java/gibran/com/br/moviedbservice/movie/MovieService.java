@@ -17,4 +17,7 @@ public interface MovieService {
 
     @GET("movie/{movieId}")
     Observable<Movie> getMovie(@Path("movieId") int movieId);
+
+    @GET("movie/{movieId}/recommendations")
+    Observable<MovieDbBaseResponse> getRecomendations(int movieId);
 }

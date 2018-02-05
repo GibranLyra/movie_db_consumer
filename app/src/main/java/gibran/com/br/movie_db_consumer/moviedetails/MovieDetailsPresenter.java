@@ -40,6 +40,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
+    public void loadRelated(int movieId) {
+
+    }
+
+    @Override
     public void subscribe() {
 
     }
