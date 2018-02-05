@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseRecyclerItem;
+import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -52,13 +53,9 @@ public class MovieItem extends BaseRecyclerItem<Movie, MovieItem, MovieItem.View
         viewHolder.titleView.setText(movie.getTitle());
         // TODO: 05/02/18 implement images
         if (!TextUtils.isEmpty(movie.getPosterPath())) {
-            String imageUrl = String.format("%s%s%s",
-                    AppContext.getInstance().getConfiguration().getImages().getBaseUrl(),
-                    AppContext.getInstance().getConfiguration().getImages().getPosterSizes().get(0),
-                    movie.getPosterPath());
             Glide.with(context)
                     .setDefaultRequestOptions(AppContext.getInstance().getGlideRequestOptions())
-                    .load(imageUrl)
+                    .load(ActivityHelper.getMoviePosterImagePath(movie))
                     .into(viewHolder.imageView);
         } else {
             Glide.with(context)

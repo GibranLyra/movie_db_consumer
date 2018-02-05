@@ -7,4 +7,5 @@
     <string name="movie_item_image_description">Movie image</string>
     <string name="movie_details_image_description">Movie image</string>
     <string name="snackbar_try_again">Tentar Novamente</string>
+    <string name="movie_poster_image_content_description">Movie Poster Image</string>
 </resources>

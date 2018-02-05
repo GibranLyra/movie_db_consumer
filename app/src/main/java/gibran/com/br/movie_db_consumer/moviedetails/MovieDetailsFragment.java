@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
+import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -59,6 +60,9 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         unbinder = ButterKnife.bind(this, view);
+        if (!(getContext() instanceof MovieDetailsFragmentListener)) {
+            throw new RuntimeException("Must implement MovieDetailsFragmentListener.");
+        }
         if (savedInstanceState == null) {
             presenter.loadMovie(getMovieIdFromBundle());
         } else {
@@ -90,6 +94,9 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     @Override
     public void showMovie(Movie movie) {
         this.movie = movie;
+        if (getContext() != null) {
+            ((MovieDetailsFragmentListener)getContext()).onImageLoaded(ActivityHelper.getMovieProfileImagePath(movie));
+        }
         setupView(movie);
     }
 
