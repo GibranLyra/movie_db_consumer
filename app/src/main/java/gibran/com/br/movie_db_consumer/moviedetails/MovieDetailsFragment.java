@@ -122,7 +122,8 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 
     private void setupView(Movie movie) {
         yearTextView.setText(ConverterHelper.formatDate(movie.getReleaseDate()));
-        durationTextView.setText(String.valueOf(movie.getRuntime()));
+        durationTextView.setText(String.format(getContext().getResources().getString(R.string.movie_item_duration_text),
+                        String.valueOf(movie.getRuntime())));
         ratingTextView.setText(String.valueOf(movie.getVoteAverage()));
         descriptionTextView.setText(movie.getOverview());
 //        if (!TextUtils.isEmpty(movie.getImages().getNormal())) {

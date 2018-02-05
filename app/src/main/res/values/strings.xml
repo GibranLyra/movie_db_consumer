@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MovieDb Consumer</string>
     <string name="movie_item_view_count_text">%1$s views</string>
-    <string name="movie_item_created_at_text">Created at %1$s</string>
+    <string name="movie_item_duration_text">%1$s Minutos</string>
     <string name="generic_error">Ocorreu um erro.</string>
     <string name="load_page_error">Ocorreu um erro ao tentar carregar a página.</string>
     <string name="movie_item_image_description">Movie image</string>
