@@ -25,6 +25,7 @@ import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.moviedbservice.model.Configuration;
 import gibran.com.br.moviedbservice.model.Genre;
 import gibran.com.br.moviedbservice.model.Movie;
+import timber.log.Timber;
 
 /**
  * Created by gibranlyra on 05/02/18.
@@ -102,6 +103,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        Timber.d("showMovies: Title %s", title);
         addRecyclerItems(movies, fastAdapter);
         fastAdapter.withOnClickListener((v, adapter, item, position) -> {
             presenter.openMovieDetails(item.getModel(), v);
@@ -137,19 +139,19 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         this.presenter = presenter;
     }
 
-    private void addRecyclerItems(ArrayList<Movie> movies, FastItemAdapter<MovieItem> fastAdapter) {
-        for (Movie movie : movies) {
-            MovieItem movieItem = new MovieItem(movie);
-            fastAdapter.add(movieItem);
-        }
-    }
-
     @Override
     protected void reloadFragment() {
         if (AppContext.getInstance().getConfiguration() == null) {
             presenter.loadConfiguration();
         } else {
             presenter.loadGenres();
+        }
+    }
+
+    private void addRecyclerItems(ArrayList<Movie> movies, FastItemAdapter<MovieItem> fastAdapter) {
+        for (Movie movie : movies) {
+            MovieItem movieItem = new MovieItem(movie);
+            fastAdapter.add(movieItem);
         }
     }
 }

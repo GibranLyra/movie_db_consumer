@@ -18,7 +18,6 @@ import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
 import gibran.com.br.moviedbservice.configuration.ConfigurationApi;
 import gibran.com.br.moviedbservice.genre.GenreApi;
-import gibran.com.br.moviedbservice.movie.MoviesApi;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -77,7 +76,6 @@ public class MovieActivity extends AppCompatActivity {
         }
         presenter = new MoviePresenter(ConfigurationApi.getInstance(),
                 GenreApi.getInstance(),
-                MoviesApi.getInstance(),
                 movieFragment,
                 SchedulerProvider.getInstance());
     }

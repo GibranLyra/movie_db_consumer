@@ -39,9 +39,10 @@ public class MovieDbApiModule {
         if (logLevel == null) {
             logLevel = LoggingInterceptor.Level.BASIC;
         }
-        LoggingInterceptor interceptor = new LoggingInterceptor(Clock.systemDefaultZone());
-        interceptor.setLogLevel(logLevel);
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor(Clock.systemDefaultZone());
+        loggingInterceptor.setLogLevel(logLevel);
+        builder.addInterceptor(loggingInterceptor);
         builder.addInterceptor(chain -> {
             Request original = chain.request();
             HttpUrl originalHttpUrl = original.url();

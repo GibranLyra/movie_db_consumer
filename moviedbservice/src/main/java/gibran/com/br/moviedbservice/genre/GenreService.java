@@ -15,6 +15,6 @@ public interface GenreService {
     @GET("genre/movie/list")
     Observable<GenreResponse> getMovieGenres();
 
-    @GET("genre/{genreId}/list")
+    @GET("genre/{genreId}/movies")
     Observable<MovieDbBaseResponse> getMovies(@Path("genreId") int genreId);
 }
