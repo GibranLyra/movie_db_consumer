@@ -9,4 +9,6 @@
     <string name="snackbar_try_again">Tentar Novamente</string>
     <string name="movie_poster_image_content_description">Movie Poster Image</string>
     <string name="movie_rating_content_descriptipon">Movie Rating</string>
+    <string name="btn_rent_text">Alugar</string>
+    <string name="btn_buy_text">Comprar</string>
 </resources>
