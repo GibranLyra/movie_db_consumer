@@ -1,5 +1,6 @@
 package gibran.com.br.movie_db_consumer.moviedetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.ConverterHelper;
 import gibran.com.br.movie_db_consumer.movie.MovieItem;
 import gibran.com.br.moviedbservice.model.Movie;
+import timber.log.Timber;
 
 /**
  * Created by gibranlyra on 25/08/17.
@@ -127,6 +129,10 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         recommendedRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         addRecyclerItems(relatedMovies, fastAdapter);
         recommendedRecycler.setAdapter(fastAdapter);
+        fastAdapter.withOnClickListener((v, adapter, item, position) -> {
+            presenter.openMovieDetails(item.getModel(), v);
+            return false;
+        });
     }
 
     @Override
@@ -140,6 +146,16 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
             progressBar.setVisibility(View.VISIBLE);
         } else {
             progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showMovieDetailsUi(Movie movie, @Nullable View v) {
+        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getTitle(), movie.getId());
+        if (getContext() != null) {
+            getContext().startActivity(intent);
+        } else {
+            Timber.e("showMovieDetailsUi: Context is null, ignoring click.");
         }
     }
 

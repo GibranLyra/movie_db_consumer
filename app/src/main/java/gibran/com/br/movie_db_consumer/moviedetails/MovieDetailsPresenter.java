@@ -1,7 +1,11 @@
 package gibran.com.br.movie_db_consumer.moviedetails;
 
+import android.support.annotation.Nullable;
+import android.view.View;
+
 import gibran.com.br.movie_db_consumer.helpers.ObserverHelper;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.BaseSchedulerProvider;
+import gibran.com.br.moviedbservice.model.Movie;
 import gibran.com.br.moviedbservice.movie.MovieDataSource;
 import io.reactivex.disposables.Disposable;
 
@@ -49,6 +53,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
                 }, e -> {
                     view.showRecommendedError();
                 });
+    }
+
+    @Override
+    public void openMovieDetails(Movie movie, @Nullable View v) {
+        view.showMovieDetailsUi(movie, v);
     }
 
     @Override

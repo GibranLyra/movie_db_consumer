@@ -1,6 +1,9 @@
 package gibran.com.br.movie_db_consumer.moviedetails;
 
 
+import android.support.annotation.Nullable;
+import android.view.View;
+
 import java.util.ArrayList;
 
 import gibran.com.br.movie_db_consumer.base.BaseContractPresenter;
@@ -19,6 +22,7 @@ public interface MovieDetailsContract {
 
         void showLoading(boolean show);
 
+        void showMovieDetailsUi(Movie movie, @Nullable android.view.View v);
 
         void showRecommendedError();
 
@@ -29,5 +33,7 @@ public interface MovieDetailsContract {
         void loadMovie(int movieId);
 
         void loadRecommended(int movieId);
+
+        void openMovieDetails(Movie movie, @Nullable View v);
     }
 }
