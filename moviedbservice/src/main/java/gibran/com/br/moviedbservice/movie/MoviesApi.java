@@ -38,4 +38,10 @@ public class MoviesApi implements MoviesDataSource {
                 .map(MovieDbBaseResponse::getResults)
                 .doOnError(e -> Timber.e(e, "getPopular: %s", e.getMessage()));
     }
+
+    @Override
+    public Observable<Movie> getDetails(int movieId) {
+        return movieService.getMovie(movieId)
+                .doOnError(e -> Timber.e(e, "getDetails: %s", e.getMessage()));
+    }
 }

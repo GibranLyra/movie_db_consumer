@@ -11,4 +11,6 @@ import io.reactivex.Observable;
 
 public interface MoviesDataSource {
     Observable<ArrayList<Movie>> getPopular();
+
+    Observable<Movie> getDetails(int movieId);
 }
