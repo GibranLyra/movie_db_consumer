@@ -111,7 +111,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         recyclerView.setAdapter(fastAdapter);
         //Make textView to title
         TextView recyclerTitleView = (TextView) LayoutInflater
-                .from(getContext()).inflate(R.layout.recycler_title_text_view, null);
+                .from(getContext()).inflate(R.layout.movie_recycler_title_text_view, null);
         recyclerTitleView.setText(title);
         //Add recycler and textview
         recyclerContainer.addView(recyclerTitleView);
