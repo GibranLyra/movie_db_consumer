@@ -26,7 +26,7 @@ public class MovieDbApiModule {
 
     private static Gson getDefaultGsonBuilder() {
         return new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
     }
 
