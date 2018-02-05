@@ -14,8 +14,10 @@
         android:layout_gravity="center"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/fragment_movie_details_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,6 +73,27 @@
                     android:layout_weight="1"
                     android:text="@string/btn_buy_text"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_movie_details_recommended_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/normal_padding"
+                    android:text="Recomendados"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fragment_movie_details_recommended_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/movie_item"
+                    tools:visibility="visible"/>
             </LinearLayout>
 
         </LinearLayout>

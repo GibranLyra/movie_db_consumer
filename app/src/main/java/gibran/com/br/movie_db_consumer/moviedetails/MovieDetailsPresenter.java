@@ -40,8 +40,15 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
-    public void loadRelated(int movieId) {
-
+    public void loadRecommended(int movieId) {
+        getMovieDisposable = movieDatasource.getRecommendations(movieId)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(movies -> {
+                    view.showRecommended(movies);
+                }, e -> {
+                    view.showRecommendedError();
+                });
     }
 
     @Override

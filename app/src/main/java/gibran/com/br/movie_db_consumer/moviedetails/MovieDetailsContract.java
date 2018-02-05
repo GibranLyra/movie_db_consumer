@@ -15,9 +15,12 @@ public interface MovieDetailsContract {
 
         void showMovieError();
 
-        void showRelated(ArrayList<Movie> relatedMovies);
+        void showRecommended(ArrayList<Movie> relatedMovies);
 
         void showLoading(boolean show);
+
+
+        void showRecommendedError();
 
         boolean isActive();
     }
@@ -25,6 +28,6 @@ public interface MovieDetailsContract {
     interface Presenter extends BaseContractPresenter {
         void loadMovie(int movieId);
 
-        void loadRelated(int movieId);
+        void loadRecommended(int movieId);
     }
 }

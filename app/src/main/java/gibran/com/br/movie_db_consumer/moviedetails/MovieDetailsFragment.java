@@ -4,10 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,6 +23,7 @@ import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.ConverterHelper;
+import gibran.com.br.movie_db_consumer.movie.MovieItem;
 import gibran.com.br.moviedbservice.model.Movie;
 
 /**
@@ -30,6 +38,8 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 
     @BindView(R.id.fragment_movie_details_progress_bar)
     ContentLoadingProgressBar progressBar;
+    @BindView(R.id.fragment_movie_details_scrollview)
+    View scrollView;
     @BindView(R.id.fragment_movie_details_year)
     TextView yearTextView;
     @BindView(R.id.fragment_movie_details_duration)
@@ -38,6 +48,10 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     TextView ratingTextView;
     @BindView(R.id.fragment_movie_details_description)
     TextView descriptionTextView;
+    @BindView(R.id.fragment_movie_details_recommended_recycler)
+    RecyclerView recommendedRecycler;
+    @BindView(R.id.fragment_movie_details_recommended_container)
+    View recommendedContainer;
 
     private Unbinder unbinder;
     private MovieDetailsContract.Presenter presenter;
@@ -59,13 +73,15 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         if (!(getContext() instanceof MovieDetailsFragmentListener)) {
             throw new RuntimeException("Must implement MovieDetailsFragmentListener.");
         }
+        int movieId = getMovieIdFromBundle();
+        presenter.loadRecommended(movieId);
         if (savedInstanceState == null) {
-            presenter.loadMovie(getMovieIdFromBundle());
+            presenter.loadMovie(movieId);
         } else {
             movie = savedInstanceState.getParcelable(LOADED_MOVIE);
             if (movie == null) {
                 //If we are restoring the state but dont have a movie, we load it
-                presenter.loadMovie(getMovieIdFromBundle());
+                presenter.loadMovie(movieId);
             } else {
                 //If we already have the movies we simply add them to the list
                 showMovie(movie);
@@ -89,6 +105,7 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 
     @Override
     public void showMovie(Movie movie) {
+        scrollView.setVisibility(View.VISIBLE);
         this.movie = movie;
         if (getContext() != null) {
             ((MovieDetailsFragmentListener) getContext()).onImageLoaded(ActivityHelper.getMovieProfileImagePath(movie));
@@ -99,6 +116,22 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     @Override
     public void showMovieError() {
         super.showError();
+    }
+
+    @Override
+    public void showRecommended(ArrayList<Movie> relatedMovies) {
+        FastItemAdapter<MovieItem> fastAdapter = new FastItemAdapter<>();
+        recommendedContainer.setVisibility(View.VISIBLE);
+        recommendedRecycler.setItemAnimator(new DefaultItemAnimator());
+        recommendedRecycler.setHasFixedSize(true);
+        recommendedRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        addRecyclerItems(relatedMovies, fastAdapter);
+        recommendedRecycler.setAdapter(fastAdapter);
+    }
+
+    @Override
+    public void showRecommendedError() {
+        recommendedContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -126,36 +159,6 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
                         String.valueOf(movie.getRuntime())));
         ratingTextView.setText(String.valueOf(movie.getVoteAverage()));
         descriptionTextView.setText(movie.getOverview());
-//        if (!TextUtils.isEmpty(movie.getImages().getNormal())) {
-//            Glide.with(getContext())
-//                    .load(movie.getImages().getNormal())
-//                    .into(imageView);
-//        } else {
-//            Glide.with(getContext())
-//                    .load(R.drawable.placeholder)
-//                    .into(imageView);
-//        }
-//        if (!TextUtils.isEmpty(movie.getUser().getAvatarUrl())) {
-//            Glide.with(getContext())
-//                    .load(movie.getUser().getAvatarUrl())
-//                    .into(avatarView);
-//        }
-//
-//        //Some Movies don`t have description, so we check if it have one
-//        if (!TextUtils.isEmpty(movie.getDescription())) {
-//            descriptionView.setText(Html.fromHtml(movie.getDescription()));
-//        }
-//        authorView.setText(String.format(getResources().getString(R.string.movie_item_view_author_text),
-//                String.valueOf(movie.getUser().getName())));
-//        likesView.setText(String.format(getResources().getString(R.string.movie_item_view_likes_text),
-//                String.valueOf(movie.getBucketsCount())));
-//        bucketsCountView.setText(String.format(getResources().getString(R.string.movie_item_view_buckets_text),
-//                String.valueOf(movie.getBucketsCount())));
-//        countsView.setText(String.format(getResources().getString(R.string.movie_item_view_count_text),
-//                String.valueOf(movie.getViewsCount())));
-//        String createdAt = ActivityHelper.getFormatedDate(movie.getCreatedAt());
-//        createdAtView.setText(String.format(getResources().getString(R.string.movie_item_created_at_text),
-//                createdAt));
     }
 
     @Override
@@ -171,5 +174,12 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
     @Override
     public void setPresenter(MovieDetailsContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    private void addRecyclerItems(ArrayList<Movie> movies, FastItemAdapter<MovieItem> fastAdapter) {
+        for (Movie movie : movies) {
+            MovieItem movieItem = new MovieItem(movie);
+            fastAdapter.add(movieItem);
+        }
     }
 }
