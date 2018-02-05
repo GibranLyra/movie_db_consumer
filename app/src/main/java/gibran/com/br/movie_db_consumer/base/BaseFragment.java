@@ -24,7 +24,7 @@ public abstract class BaseFragment<T extends BaseContractPresenter> extends Frag
         return isAdded();
     }
 
-    public void showShotError() {
+    public void showError() {
         Snackbar.make(getActivity().findViewById(R.id.rootLayout), R.string.generic_error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_try_again, v -> reloadFragment())
                 .show();

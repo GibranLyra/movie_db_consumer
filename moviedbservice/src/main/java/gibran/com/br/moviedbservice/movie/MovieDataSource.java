@@ -9,8 +9,8 @@ import io.reactivex.Observable;
  * Created by gibranlyra on 30/07/17.
  */
 
-public interface MoviesDataSource {
+public interface MovieDataSource {
     Observable<ArrayList<Movie>> getPopular();
 
-    Observable<Movie> getDetails(int movieId);
+    Observable<Movie> getMovieDetails(int movieId);
 }

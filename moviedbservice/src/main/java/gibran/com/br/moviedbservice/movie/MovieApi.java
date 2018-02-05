@@ -12,24 +12,24 @@ import timber.log.Timber;
 /**
  * Created by gibran.lyra on 05/02/2018.
  */
-public class MoviesApi implements MoviesDataSource {
-    private static MoviesApi instance;
+public class MovieApi implements MovieDataSource {
+    private static MovieApi instance;
     private final MovieService movieService;
 
-    private MoviesApi() {
+    private MovieApi() {
         Retrofit retrofit = MovieDbApiModule.getRetrofit();
         movieService = retrofit.create(MovieService.class);
     }
 
-    public static MoviesApi getInstance() {
+    public static MovieApi getInstance() {
         if (instance == null) {
-            instance = new MoviesApi();
+            instance = new MovieApi();
         }
         return instance;
     }
 
     public static void renewInstance() {
-        instance = new MoviesApi();
+        instance = new MovieApi();
     }
 
 
@@ -40,8 +40,8 @@ public class MoviesApi implements MoviesDataSource {
     }
 
     @Override
-    public Observable<Movie> getDetails(int movieId) {
+    public Observable<Movie> getMovieDetails(int movieId) {
         return movieService.getMovie(movieId)
-                .doOnError(e -> Timber.e(e, "getDetails: %s", e.getMessage()));
+                .doOnError(e -> Timber.e(e, "getMovieDetails: %s", e.getMessage()));
     }
 }

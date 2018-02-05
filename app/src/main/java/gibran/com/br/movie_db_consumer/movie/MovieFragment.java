@@ -140,7 +140,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
 
     @Override
     public void showError() {
-        super.showShotError();
+        super.showError();
     }
 
     @Override
