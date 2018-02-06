@@ -30,6 +30,7 @@ import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.movie_db_consumer.genre.GenreActivity;
+import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.moviedetails.MovieDetailsActivity;
 import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.model.Configuration;
@@ -52,6 +53,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     private Unbinder unbinder;
     private MovieContract.Presenter presenter;
     private boolean isViewLoaded = false;
+    private int genreCount;
 
     public static MovieFragment newInstance() {
         MovieFragment fragment = new MovieFragment();
@@ -106,6 +108,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         for (Genre genre : genres) {
             presenter.loadMovies(genre.getId(), genre.getName());
         }
+        genreCount = genres.size();
     }
 
     @Override
@@ -133,6 +136,7 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
                 return false;
             });
             recyclerView.setAdapter(fastAdapter);
+            recyclerView.setContentDescription(title);
             //Make textView to title
             TextView recyclerTitleView = (TextView) LayoutInflater
                     .from(getContext()).inflate(R.layout.movie_recycler_title_text_view, null);
@@ -143,6 +147,12 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
             //Add recycler and textView
             recyclerContainer.addView(recyclerTitleView);
             recyclerContainer.addView(recyclerView);
+        }
+        genreCount--;
+        if (genreCount == 0) {
+            if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                EspressoIdlingResource.decrement(); // Set app as idle.
+            }
         }
     }
 

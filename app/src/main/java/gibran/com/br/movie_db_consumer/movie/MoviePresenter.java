@@ -67,10 +67,6 @@ public class MoviePresenter implements MovieContract.Presenter {
     @Override
     public void loadGenres() {
         view.showLoading(true);
-
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
         getGenresDisposable = genreDataSource.getMovieGenres()
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -87,7 +83,6 @@ public class MoviePresenter implements MovieContract.Presenter {
         view.showLoading(true);
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
-        EspressoIdlingResource.increment(); // App is busy until further notice
         getMoviesDisposable = genreDataSource.getMovies(genreId, 1)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
