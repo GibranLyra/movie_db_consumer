@@ -54,7 +54,7 @@ public class MovieScreenTest {
     }
 
     @Test
-    public void showAllShots() {
+    public void showMovieDetails() {
         onView(withContentDescription("Action"))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
         onView(withId(R.id.activity_movie_details_toolbar_image)).check(matches(isDisplayed()));
