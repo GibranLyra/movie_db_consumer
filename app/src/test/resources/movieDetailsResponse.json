@@ -1,0 +1,59 @@
+{
+  "adult": false,
+  "backdrop_path": "/eBcjJY0o7GErxmm8SYpslvtjRyM.jpg",
+  "belongs_to_collection": null,
+  "budget": 70000000,
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    }
+  ],
+  "homepage": "http://www.battlela.com",
+  "id": 44943,
+  "imdb_id": "tt1217613",
+  "original_language": "en",
+  "original_title": "Battle: Los Angeles",
+  "overview": "The Earth is attacked by unknown forces. As people everywhere watch the world's great cities fall, Los Angeles becomes the last stand for mankind in a battle no one expected. It's up to a Marine staff sergeant and his new platoon to draw a line in the sand as they take on an enemy unlike any they've ever encountered before.",
+  "popularity": 37.006672,
+  "poster_path": "/eduBDZvRNGxvqsBgfzxyBgWMKlE.jpg",
+  "production_companies": [
+    {
+      "name": "Columbia Pictures",
+      "id": 5
+    },
+    {
+      "name": "Original Film",
+      "id": 333
+    },
+    {
+      "name": "Relativity Media",
+      "id": 7295
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "US",
+      "name": "United States of America"
+    }
+  ],
+  "release_date": "2011-03-08",
+  "revenue": 202466756,
+  "runtime": 116,
+  "spoken_languages": [
+    {
+      "iso_639_1": "en",
+      "name": "English"
+    }
+  ],
+  "status": "Released",
+  "tagline": "It's not war. It's survival.",
+  "title": "Battle: Los Angeles",
+  "video": false,
+  "vote_average": 5.5,
+  "vote_count": 1634
+}

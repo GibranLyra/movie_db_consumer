@@ -25,7 +25,7 @@ public class MovieDbApiModule {
     private static final String API_KEY_VALUE = "6cb6ca6b087d9f7ced6184178258c364";
     private static Retrofit retrofit;
 
-    private static Gson getDefaultGsonBuilder() {
+    public static Gson getDefaultGsonBuilder() {
         return new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
