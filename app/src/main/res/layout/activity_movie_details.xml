@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/movie_poster_image_content_description"
+                    android:transitionName="movie_image_transition"
                     android:src="@drawable/placeholder"/>
 
             </FrameLayout>

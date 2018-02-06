@@ -1,9 +1,11 @@
 package gibran.com.br.movie_db_consumer.movie;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -155,20 +157,34 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
     }
 
     @Override
-    public void showMovieDetailsUi(Movie movie, @Nullable View v) {
+    public void showMovieDetailsUi(Movie movie, @Nullable View transitionView) {
         Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getId(), movie.getTitle());
         if (getContext() != null) {
-            getContext().startActivity(intent);
+            if (transitionView != null) {
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation((Activity) getContext(), transitionView,
+                                "movie_image_transition");
+                getContext().startActivity(intent, options.toBundle());
+            } else {
+                getContext().startActivity(intent);
+            }
         } else {
             Timber.e("showMovieDetailsUi: Context is null, ignoring click.");
         }
     }
 
     @Override
-    public void showGenreUi(int genreId, String genreTitle, @Nullable View v) {
+    public void showGenreUi(int genreId, String genreTitle, @Nullable View transitionView) {
         Intent intent = GenreActivity.createIntent(getContext(), genreId, genreTitle);
         if (getContext() != null) {
-            getContext().startActivity(intent);
+            if (transitionView != null) {
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation((Activity) getContext(), transitionView,
+                                "movie_image_transition");
+                getContext().startActivity(intent, options.toBundle());
+            } else {
+                getContext().startActivity(intent);
+            }
         } else {
             Timber.e("showGenreUi: Context is null, ignoring click.");
         }
