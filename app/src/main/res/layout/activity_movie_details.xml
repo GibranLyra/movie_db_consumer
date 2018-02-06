@@ -52,6 +52,8 @@
         app:backgroundTint="@color/primary"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|end"
+        android:src="@drawable/ic_play_arrow"
+        android:background="?attr/selectableItemBackground"
         android:layout_margin="@dimen/normal_margin"/>
 
     <android.support.v4.widget.NestedScrollView
