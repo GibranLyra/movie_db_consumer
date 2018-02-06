@@ -75,7 +75,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
                 (MovieDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.view_container);
         if (fragment == null) {
             fragment = MovieDetailsFragment.newInstance(movieId);
-            ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.view_container);
+            ActivityHelper.replaceFragmentToActivity(getSupportFragmentManager(), fragment, R.id.view_container);
         }
         presenter = new MovieDetailsPresenter(MovieApi.getInstance(), fragment, SchedulerProvider.getInstance());
     }

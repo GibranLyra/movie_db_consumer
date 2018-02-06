@@ -73,7 +73,7 @@ public class GenreActivity extends AppCompatActivity {
                 (GenreFragment) getSupportFragmentManager().findFragmentById(R.id.view_container);
         if (genreFragment == null) {
             genreFragment = GenreFragment.newInstance(genreId);
-            ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), genreFragment, R.id.view_container);
+            ActivityHelper.replaceFragmentToActivity(getSupportFragmentManager(), genreFragment, R.id.view_container);
         }
         presenter = new GenrePresenter(GenreApi.getInstance(),
                 genreFragment,

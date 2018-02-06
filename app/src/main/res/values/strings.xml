@@ -12,4 +12,7 @@
     <string name="btn_rent_text">Alugar</string>
     <string name="btn_buy_text">Comprar</string>
     <string name="recommended">Recomendados</string>
+    <string name="bottom_navigation_menu_home_title">Todos os Filmes</string>
+    <string name="bottom_navigation_menu_about_title">Sobre o App</string>
+    <string name="about_image_content_description">Imagem Sobre o app</string>
 </resources>

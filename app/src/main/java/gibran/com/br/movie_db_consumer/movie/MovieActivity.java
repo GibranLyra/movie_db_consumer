@@ -3,16 +3,20 @@ package gibran.com.br.movie_db_consumer.movie;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gibran.com.br.movie_db_consumer.R;
+import gibran.com.br.movie_db_consumer.about.AboutFragment;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
 import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
@@ -25,6 +29,10 @@ public class MovieActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.rootLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.view_container)
+    ViewGroup viewContainer;
+    @BindView(R.id.bottomNavigation)
+    BottomNavigationView bottomNavigation;
 
     private MovieContract.Presenter presenter;
 
@@ -42,42 +50,44 @@ public class MovieActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.app_name);
         }
-// TODO: 05/02/18 fix me
-//        createDrawer();
-        setupViews();
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            changeFragment(item.getItemId());
+            return true;
+        });
+        openMovieFragment();
     }
 
-//    private void createDrawer() {
-//        AccountHeader headerResult = new AccountHeaderBuilder()
-//                .withActivity(this)
-//                .withHeaderBackground(R.drawable.header)
-//                .addProfiles(
-//                        new ProfileDrawerItem().withName("Gibran Lyra").withEmail("lyra.gibran@gmail.com")
-//                                .withIcon(getResources().getDrawable(R.drawable.profile))
-//                )
-//                .withOnAccountHeaderListener((view, profile, currentProfile) -> false)
-//                .build();
-//        //Now create your drawer and pass the AccountHeader.Result
-//        new DrawerBuilder()
-//                .withActivity(this)
-//                .withToolbar(toolbar)
-//                .withActionBarDrawerToggle(true)
-//                .withAccountHeader(headerResult)
-//                .withActionBarDrawerToggleAnimated(true)
-//                .build();
-//    }
+    private void changeFragment(@IdRes int itemId) {
+        switch (itemId) {
+            case R.id.action_movie: {
+                openMovieFragment();
+                break;
+            }
+            case R.id.action_about: {
+                openAboutFragment();
+                break;
+            }
+        }
+    }
 
-    private void setupViews() {
+    private void openMovieFragment() {
+        String moviesFragmentId = "movieFragmentId";
         MovieFragment movieFragment =
-                (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.view_container);
+                (MovieFragment) getSupportFragmentManager().findFragmentByTag(moviesFragmentId);
         if (movieFragment == null) {
             movieFragment = MovieFragment.newInstance();
-            ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), movieFragment, R.id.view_container);
+            ActivityHelper.replaceFragmentToActivity(
+                    getSupportFragmentManager(), movieFragment, R.id.view_container, moviesFragmentId);
         }
         presenter = new MoviePresenter(ConfigurationApi.getInstance(),
                 GenreApi.getInstance(),
                 movieFragment,
                 SchedulerProvider.getInstance());
+    }
+
+    private void openAboutFragment() {
+        AboutFragment aboutFragment = AboutFragment.newInstance();
+        ActivityHelper.replaceFragmentToActivity(getSupportFragmentManager(), aboutFragment, R.id.view_container);
     }
 
     @VisibleForTesting
