@@ -11,4 +11,5 @@
     <string name="movie_rating_content_descriptipon">Movie Rating</string>
     <string name="btn_rent_text">Alugar</string>
     <string name="btn_buy_text">Comprar</string>
+    <string name="recommended">Recomendados</string>
 </resources>

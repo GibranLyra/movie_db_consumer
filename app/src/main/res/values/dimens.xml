@@ -6,7 +6,8 @@
     <dimen name="xsmall_padding">4dp</dimen>
     <dimen name="xxsmall_padding">2dp</dimen>
 
-    <dimen name="normal_margin">12dp</dimen>
+    <dimen name="large_margin">12dp</dimen>
+    <dimen name="normal_margin">4dp</dimen>
     <dimen name="xsmall_margin">2dp</dimen>
 
     <dimen name="text_size_xsmall">14sp</dimen>

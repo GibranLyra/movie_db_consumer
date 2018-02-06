@@ -110,7 +110,7 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
         scrollView.setVisibility(View.VISIBLE);
         this.movie = movie;
         if (getContext() != null) {
-            ((MovieDetailsFragmentListener) getContext()).onImageLoaded(ActivityHelper.getMovieProfileImagePath(movie));
+            ((MovieDetailsFragmentListener) getContext()).onImageLoaded(ActivityHelper.getMovieBackDropImagePath(movie));
         }
         setupView(movie);
     }

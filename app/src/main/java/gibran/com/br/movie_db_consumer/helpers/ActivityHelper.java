@@ -28,10 +28,10 @@ public class ActivityHelper {
                 movie.getPosterPath());
     }
 
-    public static String getMovieProfileImagePath(Movie movie) {
+    public static String getMovieBackDropImagePath(Movie movie) {
         return String.format("%s%s%s",
                 AppContext.getInstance().getConfiguration().getImages().getBaseUrl(),
-                AppContext.getInstance().getConfiguration().getImages().getProfileSizes().get(2),
-                movie.getPosterPath());
+                AppContext.getInstance().getConfiguration().getImages().getBackdropSizes().get(0),
+                movie.getBackdropPath());
     }
 }
