@@ -151,7 +151,7 @@ public class MovieDetailsFragment extends BaseFragment<MovieDetailsContract.Pres
 
     @Override
     public void showMovieDetailsUi(Movie movie, @Nullable View v) {
-        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getTitle(), movie.getId());
+        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getId(), movie.getTitle());
         if (getContext() != null) {
             getContext().startActivity(intent);
         } else {

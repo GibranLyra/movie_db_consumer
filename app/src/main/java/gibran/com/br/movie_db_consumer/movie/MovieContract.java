@@ -27,6 +27,8 @@ public interface MovieContract {
         boolean isActive();
 
         void showMovieDetailsUi(Movie movie, @Nullable android.view.View v);
+
+        void showGenreUi(int genreId, String genreTitle, @Nullable android.view.View v);
     }
 
     interface Presenter extends BaseContractPresenter {
@@ -37,6 +39,8 @@ public interface MovieContract {
         void loadMovies(int genreId, String title);
 
         void openMovieDetails(Movie movie, @Nullable android.view.View v);
+
+        void openGenre(int genreId, String genreTitle, @Nullable android.view.View v);
 
     }
 }

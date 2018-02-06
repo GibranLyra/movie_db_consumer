@@ -101,8 +101,7 @@
                     android:id="@+id/fragment_movie_details_recommended_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/movie_item"
-                    tools:visibility="visible"/>
+                    tools:listitem="@layout/movie_item"/>
             </LinearLayout>
 
         </LinearLayout>

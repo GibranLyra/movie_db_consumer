@@ -111,4 +111,9 @@ public class MoviePresenter implements MovieContract.Presenter {
     public void openMovieDetails(Movie movie, @Nullable View v) {
         view.showMovieDetailsUi(movie, v);
     }
+
+    @Override
+    public void openGenre(int genreId, String genreTitle, @Nullable View v) {
+        view.showGenreUi(genreId, genreTitle, v);
+    }
 }

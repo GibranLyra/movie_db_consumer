@@ -32,7 +32,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     Toolbar toolbar;
     private MovieDetailsContract.Presenter presenter;
 
-    public static Intent createIntent(Context context, String movieTitle, int movieId) {
+    public static Intent createIntent(Context context, int movieId, String movieTitle) {
         Intent intent = new Intent(context, MovieDetailsActivity.class);
         intent.putExtra(EXTRA_MOVIE_ID, movieId);
         intent.putExtra(EXTRA_MOVIE_TITLE, movieTitle);
@@ -62,7 +62,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         } else {
             throw new RuntimeException("Bundle cannot be null");
         }
-
     }
 
     @Override

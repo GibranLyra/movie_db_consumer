@@ -27,6 +27,7 @@ import butterknife.Unbinder;
 import gibran.com.br.movie_db_consumer.AppContext;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
+import gibran.com.br.movie_db_consumer.genre.GenreActivity;
 import gibran.com.br.movie_db_consumer.moviedetails.MovieDetailsActivity;
 import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.model.Configuration;
@@ -133,16 +134,14 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
             //Make textView to title
             TextView recyclerTitleView = (TextView) LayoutInflater
                     .from(getContext()).inflate(R.layout.movie_recycler_title_text_view, null);
-            recyclerTitleView.setText(title);
+            recyclerTitleView.setOnClickListener(view -> {
+                presenter.openGenre(genreId, title, null);
+            });
+            recyclerTitleView.setText(String.format("%s >", title));
             //Add recycler and textView
             recyclerContainer.addView(recyclerTitleView);
             recyclerContainer.addView(recyclerView);
         }
-    }
-
-    @Override
-    public void showError() {
-        super.showError();
     }
 
     @Override
@@ -157,11 +156,21 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
 
     @Override
     public void showMovieDetailsUi(Movie movie, @Nullable View v) {
-        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getTitle(), movie.getId());
+        Intent intent = MovieDetailsActivity.createIntent(getContext(), movie.getId(), movie.getTitle());
         if (getContext() != null) {
             getContext().startActivity(intent);
         } else {
             Timber.e("showMovieDetailsUi: Context is null, ignoring click.");
+        }
+    }
+
+    @Override
+    public void showGenreUi(int genreId, String genreTitle, @Nullable View v) {
+        Intent intent = GenreActivity.createIntent(getContext(), genreId, genreTitle);
+        if (getContext() != null) {
+            getContext().startActivity(intent);
+        } else {
+            Timber.e("showGenreUi: Context is null, ignoring click.");
         }
     }
 
@@ -177,6 +186,11 @@ public class MovieFragment extends BaseFragment<MovieContract.Presenter> impleme
         } else {
             presenter.loadGenres();
         }
+    }
+
+    @Override
+    public void showError() {
+        super.showError();
     }
 
     private void addRecyclerItems(ArrayList<Movie> movies, FastItemAdapter<MovieItem> fastAdapter) {
