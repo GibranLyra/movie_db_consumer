@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.about.AboutFragment;
 import gibran.com.br.movie_db_consumer.helpers.ActivityHelper;
+import gibran.com.br.movie_db_consumer.helpers.BottomNavigationViewBehavior;
 import gibran.com.br.movie_db_consumer.helpers.EspressoIdlingResource;
 import gibran.com.br.movie_db_consumer.helpers.schedulers.SchedulerProvider;
 import gibran.com.br.moviedbservice.configuration.ConfigurationApi;
@@ -54,6 +55,9 @@ public class MovieActivity extends AppCompatActivity {
             changeFragment(item.getItemId());
             return true;
         });
+        CoordinatorLayout.LayoutParams layoutParams =
+                (CoordinatorLayout.LayoutParams) bottomNavigation.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationViewBehavior());
         openMovieFragment();
     }
 
