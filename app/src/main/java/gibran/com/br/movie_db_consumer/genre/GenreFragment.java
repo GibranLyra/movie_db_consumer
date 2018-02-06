@@ -14,7 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
 
 import java.util.ArrayList;
 
@@ -25,7 +28,10 @@ import gibran.com.br.movie_db_consumer.R;
 import gibran.com.br.movie_db_consumer.base.BaseFragment;
 import gibran.com.br.movie_db_consumer.movie.MovieItem;
 import gibran.com.br.movie_db_consumer.moviedetails.MovieDetailsActivity;
+import gibran.com.br.moviedbservice.genre.GenreApi;
 import gibran.com.br.moviedbservice.model.Movie;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -46,6 +52,7 @@ public class GenreFragment extends BaseFragment<GenreContract.Presenter>
     private Unbinder unbinder;
     private GenreContract.Presenter presenter;
     private ArrayList<Movie> movies;
+    private int genreId;
 
     public static GenreFragment newInstance(int genreId) {
         GenreFragment fragment = new GenreFragment();
@@ -60,7 +67,7 @@ public class GenreFragment extends BaseFragment<GenreContract.Presenter>
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_genre, container, false);
         unbinder = ButterKnife.bind(this, view);
-        int genreId = getGenreIdFromBundle();
+        genreId = getGenreIdFromBundle();
         if (savedInstanceState == null) {
             presenter.loadGenreMovies(genreId);
         } else {
@@ -137,7 +144,18 @@ public class GenreFragment extends BaseFragment<GenreContract.Presenter>
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
         addRecyclerItems(movies, fastAdapter);
+        ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
         recycler.setAdapter(fastAdapter);
+        recycler.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                GenreApi.getInstance().getMovies(genreId, currentPage)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(pagedMovies -> addRecyclerItems(pagedMovies, fastAdapter),
+                                e -> Timber.e(e, "onLoadMore: %s", e.getMessage()));
+            }
+        });
         fastAdapter.withOnClickListener((v, adapter, item, position) -> {
             presenter.openMovieDetails(item.getModel(), v);
             return false;
