@@ -61,6 +61,13 @@ public class GenreActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+
     private void setupViews(int genreId) {
         GenreFragment genreFragment =
                 (GenreFragment) getSupportFragmentManager().findFragmentById(R.id.view_container);
